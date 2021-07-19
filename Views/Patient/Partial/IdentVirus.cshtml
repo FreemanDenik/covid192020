@@ -1,0 +1,41 @@
+﻿@model covid192020.Models.ViewModels.TreatmentViewModel
+<tbody id="contr_ident_virus">
+    @if (Model.IdentViruses != null)
+        for (var i = 0; i < Model.IdentViruses.Count; i++)
+        {
+            <tr class="input-ident-virus">
+                <td>
+                    <input asp-for="IdentViruses[i].Id" id="id_number"  type="hidden" />
+                    <input asp-for="IdentViruses[i].CreateDate" type="date" class="form-control hide-date-ico"  />
+                </td>
+                <td>
+                    <input type="checkbox" asp-for="IdentViruses[i].IsIdent" class="form-control checkbox"/>
+
+                </td>
+                <td class='padding0'>
+                    <button type="button" onclick="RemoveElement(this, 'contr_ident_virus','input-ident-virus')" class="btn btn-danger">
+                        <svg width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        }
+    @{ Model.IdentViruses.Add(new covid192020.Models.ViewModels.IdentVirusViewModel()); }
+    <tr id="input-ident-virus" class="display-none">
+        <td>
+            <input disabled asp-for="IdentViruses[Model.IdentViruses.Count-1].Id" id="id_number"  type="hidden" />
+            <input disabled asp-for="IdentViruses[Model.IdentViruses.Count-1].CreateDate" value="" type="date" class="form-control hide-date-ico" />
+        </td>
+        <td>
+            <input disabled type="checkbox" asp-for="IdentViruses[Model.IdentViruses.Count-1].IsIdent" InitCheck class="form-control" />
+        </td>
+        <td class='padding0'>
+            <button type="button" onclick="RemoveElement(this, 'contr_ident_virus','input-ident-virus')" class="btn btn-danger">
+                <svg width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                </svg>
+            </button>
+        </td>
+    </tr>
+</tbody>

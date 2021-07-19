@@ -1,0 +1,582 @@
+﻿@model covid192020.Models.ViewModels.Dinamic
+@using covid192020.Models.ViewModels
+@{
+    ViewData["Title"] = "StatePatient";
+    var PatientInfo = (PatientViewModel)TempData["PatiebtInfo"];
+   // var SelectListDiseasePeriod = (List<SelectListItem>)TempData["DiseasePeriod"];
+    var SelectListDiagnosis = (List<SelectListItem>)TempData["Diagnosis"];
+
+}
+@section Styles{
+    <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/lib/datetimpicker/build/jquery.datetimepicker.min.css" asp-append-version="true" />*@
+}
+<h1>Динамика пациента @PatientInfo.Fio</h1>
+<hr />
+<div class="btn-group">
+    <a asp-area="" asp-controller="Patient" asp-action="DinamicPatient" asp-route-Id="13" class="btn btn-primary">Динамика</a>
+    <div style="width: 5px"></div>
+    <a asp-area="" asp-controller="Patient" asp-action="PreparatPatient" asp-route-Id="13" class="btn btn-primary">Препараты</a>
+</div>
+<hr />
+
+
+<form asp-area="" asp-controller="Patient" asp-action="DinamicPatient" asp-antiforgery="true" method="post">
+    <table border="0">
+        <tr>
+            <td style="vertical-align: top;">
+                @* Анотация к пациенту *@
+                <table border="1" class="table-info table" style="border: 0">
+                    <tr>
+                        <td style="text-align: center"><b>Дата</b></td>
+                        <td style="text-align: center"><b>Болеет</b></td>
+                        <td style="text-align: center"><b>ВДНХ </b></td>
+                        <td style="text-align: center"><b>ОРИТ </b></td>
+                        <td style="text-align: center"><b>Возраст</b></td>
+                        <td style="text-align: center"><b>Вес</b></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center">@DateTime.Now.ToShortDateString()</td>
+                        <td style="text-align: center">@DateTime.Now.Subtract(PatientInfo.DateInfected).Days</td>
+                        <td style="text-align: center">@DateTime.Now.Subtract(PatientInfo.DateAdmission).Days</td>
+                        <td style="text-align: center">@DateTime.Now.Subtract(PatientInfo.DateOrit).Days</td>
+                        <td style="text-align: center">@PatientInfo.Age</td>
+                        <td style="text-align: center">@PatientInfo.Weight</td>
+                    </tr>
+                </table>
+                <table border="0" class="pat-table">
+                    @* Период болезни *@
+                    @*<tr>
+                        <td >
+                            <label class="pat-label">Период болезни</label>
+                        </td>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-text-indent-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <select asp-for="PeriodIllness" asp-items="SelectListDiseasePeriod" title="-- Выберите пункт --" class="form-control selectpicker">
+                                
+                                </select>
+                            </div>
+                        </td>
+                    </tr>*@
+                    @* Отменить назначенные препараты *@
+                    @*<tr>
+                            <td colspan="2">
+                                <hr />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="pat-label">Отменить преп.</label>
+                            </td>
+                            <td>
+                                <div class="input-group ">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="color: red">
+                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <select class="form-control selectpicker" title="-- Выберите пункт --" multiple>
+                                        <option value="1">23.01.2020 Фавипиравир 800мг 2р/д</option>
+                                        <option value="2">12.12.2020 Дексаметазон</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>*@
+                    @* Препараты *@
+                    <tr>
+                        <td style="width:150px;">
+                            <label class="pat-label">Мед. терапия</label>
+                        </td>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list-ol" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z" />
+                                            <path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338v.041zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635V5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <input class="form-control" value="Назначение препаратами →" disabled />
+                                <div class="input-group-prepend">
+                                    <button type="button" onclick="add_preparat_field()" class="btn btn-primary">Добавить препарат</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    @* Контейнер (добавляемый) для препаратов*@
+                    <tr>
+                        <td colspan="2">
+                            @* Шблон контейнира, скрытый и с disabled на input'е *@
+                            <div id="preps-cont" style="margin: 0 auto; margin-top: 5px;margin-bottom: 5px; width: 500px">
+                                <div id="hide-prep-cont" class="input-group display-none" style="margin-bottom: 5px; ">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <input asp-for="PrescriptionPreparat" class="form-control" placeholder="Введите название препарата" disabled />
+                                    <div class="input-group-prepend">
+                                        <button type="button" onclick="remove_preparat_field(this)" class="btn btn-danger">Удалить</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        </td>
+                    </tr>
+                    @* Диагноз *@
+                    <tr>
+                        <td>
+                            <label class="pat-label">Диагнозы</label>
+                        </td>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-text-indent-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <select asp-for="Diagnosis" asp-items="@SelectListDiagnosis" title="-- Выберите пункт --" class="form-control selectpicker" multiple>
+                                  
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    @* Индентфикация вируса *@
+                    <tr>
+                        <td>
+                            <label class="pat-label">Идент. вируса</label>
+                        </td>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-exclamation-octagon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1L1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z" />
+                                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <input asp-for="VirusIdentification" type="checkbox" id="ident-virus" data-toggle-key-codes="[37,39]" /> @* data-reverse checked*@
+                            </div>
+                        </td>
+                    </tr>
+                    @* КТ *@
+                    <tr>
+                        <td>
+                            <label class="pat-label">КТ</label>
+                        </td>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-diamond-fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M9.05.435c-.58-.58-1.52-.58-2.1 0L4.047 3.339 8 7.293l3.954-3.954L9.049.435zm3.61 3.611L8.708 8l3.954 3.954 2.904-2.905c.58-.58.58-1.519 0-2.098l-2.904-2.905zm-.706 8.615L8 8.707l-3.954 3.954 2.905 2.904c.58.58 1.519.58 2.098 0l2.905-2.904zm-8.615-.707L7.293 8 3.339 4.046.435 6.951c-.58.58-.58 1.519 0 2.098l2.904 2.905z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <input asp-for="KT" class="form-control" placeholder="Пример: КТ3 с тенденцией к КТ4" />
+                            </div>
+                        </td>
+                    </tr>
+                    @*  Динамика лаборотоных показетелей, куча числовых полей *@
+                    <tr>
+                        <td rowspan="6" style="text-align:center">
+                            <label class="pat-label">
+                                Динамика лаборотоных показетелей
+                            </label>
+                        </td>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:100px">
+                                        PaO2/FiO2
+                                    </span>
+                                </div>
+                                <input asp-for="PaO2FiO2" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width:70px">
+                                        SpO2
+                                    </span>
+                                </div>
+                                <input asp-for="SpO2" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                                        ЧДД
+                                    </span>
+                                </div>
+                                <input asp-for="CHDD" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" style="width:100px">
+                                        ПКТ
+                                    </div>
+                                </div>
+                                <input asp-for="PKT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width:70px">
+                                        СРБ
+                                    </span>
+                                </div>
+                                <input asp-for="CPB" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                                        WBC
+                                    </span>
+                                </div>
+                                <input asp-for="WBC" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:100px">
+                                        PLT
+                                    </span>
+                                </div>
+                                <input asp-for="PLT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                                        Д-Дим
+                                    </span>
+                                </div>
+                                <input asp-for="D_Dim" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                                        Об.
+                                        бел.
+                                    </span>
+                                </div>
+                                <input asp-for="Ob_bel" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:100px">
+                                        Об.
+                                        бил.
+                                    </span>
+                                </div>
+                                <input asp-for="Ob_bil" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                                        Моч.
+                                    </span>
+                                </div>
+                                <input asp-for="Moch" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                                        Креат.
+                                    </span>
+                                </div>
+                                <input asp-for="Kreat" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:100px">
+                                        Ф-ген
+                                    </span>
+                                </div>
+                                <input asp-for="F_gen" type="number"  class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                                        АЛТ
+                                    </span>
+                                </div>
+                                <input asp-for="ALT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                                        АСТ
+                                    </span>
+                                </div>
+                                <input asp-for="ACT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:100px">
+                                        ЛДГ
+                                    </span>
+                                </div>
+                                <input asp-for="LDG" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                                        Лимф.
+                                    </span>
+                                </div>
+                                <input asp-for="Lymphocytes" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                                        Феррит.
+                                    </span>
+                                </div>
+                                <input asp-for="Ferritin" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                            </div>
+                        </td>
+                    </tr>
+                    @* Примечание *@
+                    <tr>
+                        <td>
+                            <label class="pat-label">
+                                Примечание
+                            </label>
+                        </td>
+                        <td>
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <textarea asp-for="Note" style="min-height: 60px" class="form-control" placeholder="Укажите то или иное примечение к данной записи, если таково есть!"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="vertical-align: top; padding-left: 2px">
+                @* Список исползованных препаратов *@
+                <table border="1" class="table-info table" style="border: 0; width: 550px; text-align: center; vertical-align: central">
+                    <tr>
+                        <td colspan="3" style="text-align: center"><b>Назначенные препараты</b></td>
+                    </tr>
+                    <tr>
+                        <td><b>Дата <br />назнач.</b></td>
+                        <td style="min-width: 200px"><b>Название<br />препарата</b></td>
+                        <td><b>Отмен.<br />преп.</b></td>
+                    </tr>
+                    <tr>
+                        <td>12.12.2020</td>
+                        <td>Фавипиравир 800мг 2р/д </td>
+                        <td>02.02.2021</td>
+                    </tr>
+                    <tr>
+                        <td>12.12.2020</td>
+                        <td>1. Дексаметазон</td>
+                        <td>действует</td>
+                    </tr>
+                    <tr>
+                        <td>12.12.2020</td>
+                        <td>Фраксипарин 0,9 2 р/д</td>
+                        <td>
+                            действует
+                            @*<input name="СancelPreparats" value="2" type="checkbox" class="form-control" style="width:20px; height: 20px; margin: 0 auto" />*@
+                        </td>
+                    </tr>
+                </table>
+                @*<iframe src="@Url.Action("Index","Home")" style="width: 550px; height: 400px">
+
+                </iframe>*@
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding: 20px;">
+                <button class="btn btn-success">Сохранить запись в базу данных</button>
+            </td>
+        </tr>
+    </table>
+</form>
+@section Popper{
+    @* Popper должен находится перед файлом boostrap *@
+    <script src="~/lib/bootstrap-select/dist/popper.js"></script>
+}
+@section Scripts{
+
+    @*<script src="~/lib/datetimpicker/build/jquery.datetimepicker.full.js"></script>*@
+    @*<script src="~/js/moment.js"></script>*@
+    <script src="~/lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="~/lib/bootstrap-select/dist/js/i18n/defaults-ru_RU.js"></script>
+
+    <script src="~/lib/bootstrap-checkbox/dist/js/bootstrap-checkbox.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap-checkbox/dist/js/i18n/ru.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    @*<script src="~/lib/jquery-validation/dist/localization/messages_ru.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.js" asp-append-version="true"></script>*@
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+
+    <script>
+        var valid_preps_length = 10;
+        // Добавить поле в контейнер "препараты"
+        function add_preparat_field() {
+            var preps_cont = $('#preps-cont');
+            var preps_length = parseInt($(preps_cont).find('.prep-cont').length);
+            if (preps_length < valid_preps_length) {
+                var hide_prep_cont = $('#hide-prep-cont').clone();
+                $(hide_prep_cont).removeAttr('id');
+                $(hide_prep_cont).addClass('prep-cont')
+                $(hide_prep_cont).removeClass('display-none');
+                $(hide_prep_cont).find('input').attr('disabled', false);
+                //$(hide_prep_cont).find('input').attr('name', 'patient.preparats[]');
+                /*$(hide_prep_cont).find('button').on('click', function () {
+                    $(this).unbind();
+                    $(this).closest('.prep-cont').remove();
+                })*/
+                preps_cont.append(hide_prep_cont);
+
+                delete hide_prep_cont;
+            }
+            delete preps_cont;
+            delete preps_length;
+        }
+        // Удалить поле из контейнера "препараты"
+        function remove_preparat_field(obj) {
+            $(obj).closest('.prep-cont').remove();
+        }
+        $(function () {
+
+            /*$.datetimepicker.setLocale('ru');
+            $('.datetimepicker').datetimepicker({
+                lang: 'ru',
+                timepicker: false,
+                format: 'd.m.Y',
+                theme: 'dark',
+                onChangeDateTime: function (dp, $input) {
+
+
+                    // Узнать сутки между датами, файл moment.js
+                    //var dateB = moment('2014-12-12');
+                    //var dateC = moment('2014-12-01');
+                    //console.log(dateB.diff(dateC, 'days'));
+
+                }
+                //allowBlank: true,
+                //validateOnBlur: true/*,
+                //mask: '31/12/9999'
+                // mask: true,
+            });*/
+
+            //$('#add-prep').on('click', function () {
+            //    var preps_cont = $('#preps-cont');
+            //    var preps_length = parseInt($(preps_cont).find('.prep-cont').length);
+            //    if (preps_length < valid_preps_length) {
+            //        var hide_prep_cont = $('#hide-prep-cont').clone();
+            //        $(hide_prep_cont).removeAttr('id');
+            //        $(hide_prep_cont).addClass('prep-cont')
+            //        $(hide_prep_cont).removeClass('display-none');
+            //        $(hide_prep_cont).find('input').attr('disabled', false);
+            //        //$(hide_prep_cont).find('input').attr('name', 'patient.preparats[]');
+            //        $(hide_prep_cont).find('button').on('click', function () {
+            //            $(this).unbind();
+            //            $(this).closest('.prep-cont').remove();
+            //        })
+            //        preps_cont.append(hide_prep_cont);
+            //    }
+            //})
+
+            $('.selectpicker').selectpicker({
+                selectedTextFormat: 'count > 3'
+            });
+
+            @* <select class="form-control selectpicker" title="-- Выберите пункт --" multiple>
+                <option value="1">Противовирусные</option>
+                <option value="2">ГЛС</option>
+                <option value="3">Блокаторы ИЛ</option>
+                <option value="4">ЯК киназы</option>
+                <option value="5">Антикоагулянты</option>
+                <option value="6">Антибиотики</option>
+                <option value="7">Антигипертензивная терапия</option>
+                <option value="9">Антигликемическая</option>
+                <option value="10">Отхаркивающее</option>
+                <option value="11">Витаминотерапия</option>
+                <option value="12">Другое</option>
+            </select> *@
+
+            $("#ident-virus").checkboxpicker({
+                onLabel: 'Подтвержден',
+                offLabel: 'Не подтвержден',
+                onActiveCls: 'btn-danger',
+                offActiveCls: 'btn-success',
+                onCls: 'btn-outline-secondary',
+                offCls: 'btn-outline-secondary'
+            });
+            $("#ident-virus").parent().children(".btn-group").removeAttr("tabindex");
+            $("#ident-virus").parent().find("button").attr("tabindex", "0");
+        });
+        /*$('.selectpicker').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            console.log(isSelected, previousValue, $(this).selectpicker('val'));
+        });
+        $('.selectpicker').on('shown.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            console.log('show');
+        });
+        $('.selectpicker').on('hidden.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            console.log('hide');
+        });*/
+    </script>
+}
+<style>
+    .display-none {
+        display: none
+    }
+
+    input, textarea, .btn {
+        border-radius: 0 !important;
+    }
+
+    table.pat-table {
+        width: 640px !important;
+        margin: 0 auto;
+        box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    }
+    table.pat-table label.pat-label {
+        padding-right: 5px;
+        font-size: 15px;
+    }
+
+    table.pat-table input, table.pat-table textarea {
+        max-width: 100%
+    }
+
+    table.pat-table tr td {
+        text-align: right
+    }
+
+    table.pat-table .pat-laborat-input {
+        min-width: 80px !important;
+        max-width: 80px !important
+    }
+    /*input[type="date"]::-webkit-calendar-picker-indicator {
+            color: rgba(0, 0, 0, 0);
+            opacity: 1;
+            display: block;
+            background: url(https://mywildalberta.ca/images/GFX-MWA-Parks-Reservations.png) no-repeat;
+            width: 20px;
+            height: 20px;
+            border-width: thin;
+        }*/
+</style>

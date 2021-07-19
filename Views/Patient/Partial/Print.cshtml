@@ -1,0 +1,289 @@
+﻿@using covid192020.Infrastructure
+@{
+    Layout = null;
+}
+@model covid192020.Models.ViewModels.TreatmentViewModel
+<head>
+    <link href="~/css/print-treatment.css" rel="stylesheet" type="text/css" asp-append-version="true">
+</head>
+<body>
+    <div style="text-align:center">
+        <h1>@Model.PatientInfo.Fio</h1>
+    </div>
+    <table >
+        <thead>
+            <tr>
+                <td colspan="8">Общие данные</td>
+            </tr>
+            <tr>
+                <td>Дата последней записи</td>
+                <td>Болеет</td>
+                <td>ВДНХ </td>
+                <td>ОРИТ </td>
+                <td>Возраст</td>
+                <td>Вес</td>
+                <td>
+                    Диагноз
+                </td>
+            </tr>
+        </thead>
+        <tr>
+            <td>@(Model.LastChangeDate != null ? ((DateTime)Model.LastChangeDate).ToString("dd MMMM yyyy HH:mm:ss") : "нет записи")</td>
+            <td>@Model.PatientInfo.DateInfected.ToString("dd.MM.yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateInfected).Days (сутки)</td>
+            <td>@Model.PatientInfo.DateAdmission.ToString("dd.MM.yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateAdmission).Days (сутки)</td>
+            <td>@Model.PatientInfo.DateOrit.ToString("dd.MM.yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateOrit).Days (сутки)</td>
+            <td>@Model.PatientInfo.Age</td>
+            <td>@Model.PatientInfo.Weight</td>
+            <td>
+                @(String.Join(", ", Model.SelectListDiagnosis.Where(t=>t.Selected == true).Select(t=>t.Text)))
+            </td>
+        </tr>
+    </table>
+    <br />
+    @* Динамика *@
+    <table class="dinamics">
+        <thead>
+            <tr>
+                <td colspan="19">
+                    Динамика
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Дата
+                </td>
+                <td>
+                    PaO2/<br /> FiO2
+                </td>
+                <td>
+                    SpO2
+                </td>
+                <td>
+                    ЧДД
+                </td>
+                <td>
+                    ПКТ
+                </td>
+                <td>
+                    СРБ
+                </td>
+                <td>
+                    WBC
+                </td>
+                <td>
+                    PLT
+                </td>
+                <td>
+                    Д-<br />Дим
+                </td>
+                <td>
+                    Об.<br /> бел
+                </td>
+                <td>
+                    Об.<br /> бил
+                </td>
+                <td>
+                    Моч
+                </td>
+                <td>
+                    Креат
+                </td>
+                <td>
+                    Ф-<br />ген
+                </td>
+                <td>
+                    АЛТ
+                </td>
+                <td>
+                    АСТ
+                </td>
+                <td>
+                    ЛДГ
+                </td>
+                <td>
+                    Лимф<br /> оциты
+                </td>
+                <td>
+                    Ферр<br /> итин
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.Dinamics)
+            {
+                <tr>
+                    <td>
+                        @CustomHelper.GetDateShortAndTime(i.CreateDate)
+                    </td>
+                    <td>
+                        @i.PaO2FiO2
+                    </td>
+                    <td>
+                        @i.SpO2
+                    </td>
+                    <td>
+                        @i.CHDD
+                    </td>
+                    <td>
+                        @i.PKT
+                    </td>
+                    <td>
+                        @i.CRB
+                    </td>
+                    <td>
+                        @i.WBC
+                    </td>
+                    <td>
+                        @i.PLT
+                    </td>
+                    <td>
+                        @i.D_Dim
+                    </td>
+                    <td>
+                        @i.Ob_bel
+                    </td>
+                    <td>
+                        @i.Ob_bil
+                    </td>
+                    <td>
+                        @i.Moch
+                    </td>
+                    <td>
+                        @i.Kreat
+                    </td>
+                    <td>
+                        @i.F_gen
+                    </td>
+                    <td>
+                        @i.ALT
+                    </td>
+                    <td>
+                        @i.ACT
+                    </td>
+                    <td>
+                        @i.LDG
+                    </td>
+                    <td>
+                        @i.Lymphocytes
+                    </td>
+                    <td>
+                        @i.Ferritin
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <table class="no-border">
+        <tr>
+            <td style="vertical-align: top">
+                @* Препараты *@
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="3">
+                                Препараты
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Дата
+                            </td>
+                            <td>
+                                Назначение
+                            </td>
+                            <td>
+                                Отм.
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.Preparats)
+                        {
+                            <tr>
+                                <td>
+                                    @CustomHelper.GetDateShortAndTime(i.CreateDate)
+                                </td>
+                                <td style="text-align: left">
+                                    @i.Title
+                                </td>
+                                <td>
+                                    @(i.CancelDate != null ? CustomHelper.GetDateShortAndTime((DateTime)i.CancelDate) : "-")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+
+            <td style="vertical-align: top">
+                @* КТ *@
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                КТ
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Дата
+                            </td>
+                            <td>
+                                Тенденциея
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.Kts)
+                        {
+                            <tr>
+                                <td>
+                                    @CustomHelper.GetDateShortAndTime(i.CreateDate)
+                                </td>
+                                <td style="text-align: left">
+                                    @i.Title
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </td>
+            <td style="vertical-align: top">
+                @* Идентификация вируса *@
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                Исследование вируса
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Дата
+                            </td>
+                            <td>
+                                Идентифицирован
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model.IdentViruses)
+                        {
+                            <tr>
+                                <td>
+                                    @CustomHelper.GetDateShortAndTime(i.CreateDate)
+                                </td>
+                                <td>
+                                    @(i.IsIdent == true ? "Да" : "Нет")
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>

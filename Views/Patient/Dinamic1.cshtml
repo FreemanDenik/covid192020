@@ -1,0 +1,184 @@
+﻿<h2>Динамика ФИО</h2>
+<hr />
+@{var PatientId = ViewContext.RouteData.Values["PatientId"]; }
+<div class="btn-group">
+    <a asp-area="" asp-controller="Patient" asp-action="Treatment" asp-route-PatientId="@PatientId" class="btn btn-primary">
+        <svg width="16" height="16" fill="currentColor" class="bi bi-file-spreadsheet-fill" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M12 0H4a2 2 0 0 0-2 2v4h12V2a2 2 0 0 0-2-2zm2 7h-4v2h4V7zm0 3h-4v2h4v-2zm0 3h-4v3h2a2 2 0 0 0 2-2v-1zm-5 3v-3H6v3h3zm-4 0v-3H2v1a2 2 0 0 0 2 2h1zm-3-4h3v-2H2v2zm0-3h3V7H2v2zm4 0V7h3v2H6zm0 1h3v2H6v-2z" />
+        </svg>
+        Таблица
+    </a>
+    <div style="width: 5px"></div>
+    <a asp-area="" asp-controller="Patient" asp-action="AddEdit" asp-route-PatientId="@PatientId" class="btn btn-primary">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pen" fill="currentColor">
+            <path fill-rule="evenodd" d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+        </svg>
+        Пациент
+    </a>
+    <div style="width: 5px"></div>
+    <a asp-area="" asp-controller="Patient" asp-action="Dinamic" asp-route-PatientId="@PatientId" class="btn btn-primary">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-lines-fill" fill="currentColor">
+            <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7 1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm2 9a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+        </svg>
+        Динамика
+    </a>
+    <div style="width: 5px"></div>
+    <a asp-area="" asp-controller="Patient" asp-action="Preparat" asp-route-PatientId="@PatientId" class="btn btn-primary">
+        <svg width="16" height="16" fill="currentColor" class="bi bi-droplet-half" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10c0 0 2.5 1.5 5 .5s5-.5 5-.5c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z" />
+            <path fill-rule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z" />
+        </svg>
+        Препараты
+    </a>
+</div>
+<hr />
+<table>
+    @*  Динамика лаборотоных показетелей, куча числовых полей *@
+    <tr>
+       
+        <td>
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="width:100px">
+                        PaO2/FiO2
+                    </span>
+                </div>
+                <input name="PaO2FiO2" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width:70px">
+                        SpO2
+                    </span>
+                </div>
+                <input name="SpO2" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                        ЧДД
+                    </span>
+                </div>
+                <input name="CHDD" type="number" class="form-control pat-laborat-input" placeholder="0" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <div class="input-group-text" style="width:100px">
+                        ПКТ
+                    </div>
+                </div>
+                <input name="PKT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width:70px">
+                        СРБ
+                    </span>
+                </div>
+                <input name="CPB" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                        WBC
+                    </span>
+                </div>
+                <input name="WBC" type="number" class="form-control pat-laborat-input" placeholder="0" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="width:100px">
+                        PLT
+                    </span>
+                </div>
+                <input name="PLT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                        Д-Дим
+                    </span>
+                </div>
+                <input name="D_Dim" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                        Об.
+                        бел.
+                    </span>
+                </div>
+                <input name="Ob_bel" type="number" class="form-control pat-laborat-input" placeholder="0" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="width:100px">
+                        Об.
+                        бил.
+                    </span>
+                </div>
+                <input name="Ob_bil" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                        Моч.
+                    </span>
+                </div>
+                <input name="Moch" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                        Креат.
+                    </span>
+                </div>
+                <input name="Kreat" type="number" class="form-control pat-laborat-input" placeholder="0" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="width:100px">
+                        Ф-ген
+                    </span>
+                </div>
+                <input name="F_gen" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                        АЛТ
+                    </span>
+                </div>
+                <input name="ALT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                        АСТ
+                    </span>
+                </div>
+                <input name="ACT" type="number" class="form-control pat-laborat-input" placeholder="0" />
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="width:100px">
+                        ЛДГ
+                    </span>
+                </div>
+                <input name="LDG" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 70px">
+                        Лимф.
+                    </span>
+                </div>
+                <input name="Lymphocytes" type="number" class="form-control pat-laborat-input" placeholder="0" />
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="border-left: 0; width: 80px">
+                        Феррит.
+                    </span>
+                </div>
+                <input name="Ferritin" type="number" class="form-control pat-laborat-input" placeholder="0" />
+            </div>
+        </td>
+    </tr>
+</table>

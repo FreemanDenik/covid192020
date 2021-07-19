@@ -1,0 +1,84 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/js/site.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/bootstrap-select/dist/css/bootstrap-select.min.css",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap-select/dist/css/bootstrap-select.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/moment.min.js",
+    "inputFiles": [
+      "wwwroot/js/moment.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/bootstrap-select/dist/popper.min.js",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap-select/dist/popper.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/file.min.js",
+    "inputFiles": [
+      "wwwroot/js/file.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/addMethod.min.js",
+    "inputFiles": [
+      "wwwroot/js/addMethod.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/bootstrap-checkbox/dist/js/i18n/ru.min.js",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap-checkbox/dist/js/i18n/ru.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/print-treatment.min.css",
+    "inputFiles": [
+      "wwwroot/css/print-treatment.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/boostrap-select-validation.min.js",
+    "inputFiles": [
+      "wwwroot/js/boostrap-select-validation.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/bootstrap-select/boostrap-select-validation.min.js",
+    "inputFiles": [
+      "wwwroot/js/bootstrap-select/boostrap-select-validation.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/bootstrap-select/popper.min.js",
+    "inputFiles": [
+      "wwwroot/js/bootstrap-select/popper.js"
+    ]
+  }
+]

@@ -1,0 +1,540 @@
+﻿@model covid192020.Models.ViewModels.TreatmentViewModel
+@using covid192020.Models.ViewModels
+@using covid192020.Infrastructure
+@{
+
+    // var PatientInfo = (PatientViewModel)ViewBag.PatientInfo;
+    ViewData["Title"] = $"Лечение {Model.PatientInfo.Fio}";
+
+}
+@section Styles{
+    <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/lib/datetimpicker/build/jquery.datetimepicker.min.css" asp-append-version="true" />*@
+}
+<div>
+    <div style="display: block; float: right; margin-top: 5px">
+        <a asp-protocol="https" asp-area="" asp-controller="Patient" asp-action="AddEdit" asp-route-PatientId="@Model.PatientId" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+            </svg>
+            Пациент
+        </a>
+        <button onclick="print()" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
+                <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" />
+                <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+            </svg>
+            Печать
+        </button>
+    </div>
+    <div style="display: block;">
+        <h2>@Model.PatientInfo.Fio</h2>
+    </div>
+</div>
+
+<hr />
+@if (TempData["SaveTreatment"] != null && (bool)TempData["SaveTreatment"] == true)
+{
+    <div>
+        <h3 style="color: forestgreen">Сохранение данных прошло успешно!</h3>
+        <hr />
+    </div>
+}
+@*@{var PatientId = ViewContext.RouteData.Values["PatientId"]; }*@
+
+
+@*
+
+    <form asp-controller="Patient" asp-action="AddPreparatPatient"
+                         data-ajax="true"
+                         data-ajax-method="POST"
+                         data-ajax-mode="after"
+                         data-ajax-update="#contr-preparapts"
+                         data-ajax-begin="PreparatBegin"
+                         data-ajax-success="PreparatSuccess">
+
+*@
+
+
+<form asp-area="" asp-controller="Patient" asp-action="Treatment" id="main-form" method="post" asp-antiforgery="true" novalidate>
+    @* PatientId спецом добавлен в Treatment потому что если использовать PatientInfo.Id все остольные члены будут требовтаь
+        заполнения днных и ModelState.IsValid будет false *@
+    <input asp-for="PatientId" type="hidden" />
+    @* Анотация к пациенту *@
+    <table border="0" class="table pat">
+        <thead class="table-dark">
+            <tr>
+                <td colspan="8">Общие данные</td>
+            </tr>
+            <tr>
+                <td>Дата этой записи</td>
+                <td>Болеет</td>
+                <td>ВДНХ </td>
+                <td>ОРИТ </td>
+                <td>Возраст</td>
+                <td>Вес</td>
+
+            </tr>
+        </thead>
+        <tr>
+            <td class="label-grey">
+                @DateTime.Now.ToString("dd.MM.yyyy")
+            </td>
+            <td class="label-grey">@Model.PatientInfo.DateInfected.ToString("dd MMMM yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateInfected).Days (сутки)</td>
+            <td class="label-grey">@Model.PatientInfo.DateAdmission.ToString("dd MMMM yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateAdmission).Days (сутки)</td>
+            <td class="label-grey">@Model.PatientInfo.DateOrit.ToString("dd MMMM yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateOrit).Days (сутки)</td>
+            <td class="label-grey">@Model.PatientInfo.Age</td>
+            <td class="label-grey">@Model.PatientInfo.Weight</td>
+
+        </tr>
+    </table>
+    <table border="0" class="table pat">
+        <thead class="table-dark">
+            <tr>
+                <td>
+                    Диагноз
+                </td>
+                @*<td>
+                        Вирус идентифицирован
+                    </td>*@
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 0">
+                    <select asp-for="Diagnosis" asp-items="@Model.SelectListDiagnosis" title="-- Выберите пункт --" class="form-control selectpicker" multiple>
+                    </select>
+
+                </td>
+                @*<td style=" padding: 0">
+                        <!--<input id="VirusIdentification" type="checkbox" data-toggle-key-codes="[37,39]" />-->
+                        @if (Model.DateVirusIdentification == null)
+                        {
+                            <input asp-for="DateVirusIdentification" type="date" class="form-control" />
+                        }
+                        else
+                        {
+                            <div style="background: rgba(220, 0, 0, 0.58); color: black; border-radius:0" disabled type="date" class="form-control" >@(((DateTime)Model.DateVirusIdentification).ToString("dd MMMM yyyy hh:mm:ss"))</div>
+                        }
+                    </td>*@
+            </tr>
+        </tbody>
+    </table>
+    <table border="0" class="table pat">
+        <thead class="table-dark">
+            <tr>
+                <td style="width: 91px">Дата </td>
+                <td>PaO2/<br /> FiO2</td>
+                <td>SpO2</td>
+                <td>ЧДД</td>
+                <td>ПКТ</td>
+                <td>СРБ</td>
+                <td>WBC</td>
+                <td>PLT</td>
+                <td>Д-<br />Дим</td>
+                <td>Об.<br /> бел</td>
+                <td>Об.<br /> бил</td>
+                <td>Моч</td>
+                <td>Креат</td>
+                <td>Ф-<br />ген</td>
+                <td>АЛТ</td>
+                <td>АСТ</td>
+                <td>ЛДГ</td>
+                <td>Лимф<br /> оциты</td>
+                <td>Ферр<br /> итин</td>
+                <td style="padding:0!important; width: 1px">
+                    <button type="button" onclick="AddElement('contr-dinamics','input-dinamics', 30)" class="btn btn-primary" style="max-height: 100%">
+                        <svg width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        </thead>
+
+        @await Html.PartialAsync("Partial/Dinamics", Model)
+
+    </table>
+    <table border="0" style="width: 100%">
+        <tr>
+            <td style="vertical-align: top;">
+                @* Препараты *@
+                <table border="0" class="table" style=" width: 100%">
+                    <thead class="table-dark pat paddingTopBottom2">
+                        <tr>
+                            <td style=" border: 0 !important">Назнавение препаратов</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:0; border:0!important">
+
+                                <div class="input-group ">
+                                    <div class="form-control label-grey" style="border-radius: 0; border: 0!important">Назначение препаратами → </div>
+                                    <div class="input-group-prepend" style="padding-right: 1px">
+                                        <button type="button" onclick="AddElement('contr_preparats','input-preparats', 30)" class="btn btn-primary">
+                                            <svg width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td style="padding:0; border:0!important">
+                                <table class="table pat">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <td style="width: 90px; border:0!important">Дата</td>
+                                            <td style="width: 100%; border: 0 !important">Название</td>
+                                            <td style="width: 90px; border:0!important">Отменен</td>
+                                            <td style="width: 42px; border:0!important"></td>
+                                        </tr>
+                                    </thead>
+                                    @await Html.PartialAsync("Partial/Preparats", Model)
+                                </table>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </td>
+            @* KT *@
+            <td style="vertical-align: top; width: 350px">
+                <table border="0" class="table" style="margin-bottom: 0; width: 100%">
+                    <thead class="table-dark pat paddingTopBottom2">
+                        <tr>
+                            <td style=" border: 0 !important">КТ</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:0;border: 0 !important">
+                                <div class="input-group ">
+                                    <div class="form-control label-grey" style="border-radius: 0;border: 0 !important">Исследование КТ →</div>
+                                    <div class="input-group-prepend" style="padding-right: 1px">
+                                        <button type="button" onclick="AddElement('contr_kts','input-kts', 30)" class="btn btn-primary" style="max-height: 100%">
+                                            <svg width="18" height="18" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td style="padding:0;border: 0 !important">
+                                <table class="table pat">
+                                    <thead class="table-dark pat">
+                                        <tr>
+                                            <td style="width: 90px; border: 0 !important">Дата</td>
+                                            <td style=" border: 0 !important" colspan="2">Исследования </td>
+                                        </tr>
+                                    </thead>
+                                    @await Html.PartialAsync("Partial/Kts", Model)
+
+                                </table>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </td>
+            @* Идентификация вируса *@
+            <td style="vertical-align: top; width: 240px">
+                <table border="0" class="table" style="margin-bottom: 0; width: 100%">
+                    <thead class="table-dark pat paddingTopBottom2">
+                        <tr>
+                            <td style=" border: 0 !important">Идентификация вируса</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:0; border: 0 !important" colspan="2">
+                                <div class="input-group ">
+                                    <div class="form-control label-grey" style="border-radius: 0; border: 0 !important">Исследование →</div>
+                                    <div class="input-group-prepend" style="padding-right: 1px">
+                                        <button type="button" onclick="AddElement('contr_ident_virus','input-ident-virus', 30)" class="btn btn-primary" style="max-height: 100%">
+                                            <svg width="18" height="18" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td style="padding:0; border: 0 !important">
+                                <table class="table pat">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <td style="width: 90px; border: 0 !important">Дата</td>
+                                            <td style="border: 0 !important" colspan="2">Идентифицирован? </td>
+                                        </tr>
+                                    </thead>
+                                    @await Html.PartialAsync("Partial/IdentVirus", Model)
+
+                                </table>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <div style=" text-align: center">
+        <button type="submit" class="btn btn-success">Сохранить данные</button>
+    </div>
+</form>
+
+<iframe id="print_treatment" src="@Url.Action("Treatment", "Patient", new { area = "", PatientId = Model.PatientId, Print = "print" })" style="display: none">
+</iframe>
+@section Popper{
+    <script src="~/js/bootstrap-select/popper.min.js"></script>
+}
+@section Scripts{
+
+    @*<script src="~/lib/datetimpicker/build/jquery.datetimepicker.full.js"></script>*@
+    @*<script src="~/js/moment.js"></script>*@
+    <script src="~/lib/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-select/dist/js/i18n/defaults-ru_RU.min.js"></script>
+    <script src="~/js/bootstrap-select/boostrap-select-validation.min.js"></script>
+
+    <script src="~/lib/bootstrap-checkbox/dist/js/bootstrap-checkbox.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap-checkbox/dist/js/i18n/ru.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="~/js/addMethod.min.js" asp-append-version="true"></script>
+    @*<script src="~/lib/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js" asp-append-version="true"></script>*@
+    <script>
+        function print() {
+
+            document.getElementById('print_treatment').contentWindow.print();
+
+        }
+        // <table, thead, tbody... id='_main_conteiner'>
+        //   <tr id='_inputs_container'>
+        //     <td> <input name='className[N].valueName'> </td>
+        //     <td> <button onClick='AddElement(_main_conteiner, _inputs_container, 5)'>+</button>
+        function AddElement(_main_conteiner, _inputs_container, max_count, resetNumbers = true) {
+            var main_conteiner = $('#' + _main_conteiner);
+            var count = main_conteiner.find('.' + _inputs_container).length;
+            if (max_count <= count) return false;
+
+            var inputs_container = $('#' + _inputs_container).clone();
+            inputs_container.removeAttr('id');
+            inputs_container.addClass(_inputs_container);
+
+            // добавить leavAloneDisabled к input  чтобы не удалял disabled
+            inputs_container.find('input:not([leavAloneDisabled]), button:not([leavAloneDisabled])').attr('disabled', false);
+
+            inputs_container.removeClass('display-none');
+
+            main_conteiner.append(inputs_container);
+
+            var arr = main_conteiner.find('.' + _inputs_container);
+            if (resetNumbers == true)
+                ReSetNameAndId(arr);
+
+            // добавлять к input type=checkbox InitCheck чтобы динамично преобразовывать в bootstrap-checkbox
+            if (parseInt($(inputs_container).find('input[InitCheck]').length) > 0) {
+                InitCheckBox($(inputs_container).find('input[InitCheck]'));
+                $(inputs_container).find('input[InitCheck]').removeAttr('InitCheck')
+            }
+
+            // сброс и установка валидации jquery validation
+            var validator = $("#main-form").validate();
+            validator.destroy();
+            $.validator.unobtrusive.parse("#main-form");
+        }
+        function RemoveElement(obj, _main_conteiner, _inputs_container, resetNumbers = true) {
+            var id_input = $(obj).closest('tr').find('input#id_number');
+            var id_number = parseInt(id_input.val());
+            if (id_number === 0) {
+                $(obj).closest('tr').remove();
+                var arr = $('#' + _main_conteiner).find('.' + _inputs_container);
+            } else if (id_number > 0) {
+                id_input.val((id_number * -1));
+                $(obj).toggleClass('btn-warning btn-danger');
+            } else if (id_number < 0) {
+                id_input.val((id_number * -1));
+                $(obj).toggleClass('btn-warning btn-danger');
+            }
+            // resetNumbers по умолчанию true означает перебрать по числам все name и id и переустановить числа от 0 до max
+            // если false то ничего выше перечисленного не проиcходит, такое подходит для простых массивов типа List<string>
+            if (resetNumbers == true)
+                ReSetNameAndId(arr);
+        }
+        function ReSetNameAndId(conteiner_arr) {
+
+            $.each(conteiner_arr, function (e, i) {
+                var arrInput = $(i).find('input');
+                $.each(arrInput, function (ee, ii) {
+                    var innm = $(ii).attr('name').replace(/\d+/, e);
+                    var inid = $(ii).attr('id').replace(/\d+/, e);
+                    $(ii).attr('name', innm);
+                    $(ii).attr('id', inid);
+
+                })
+            })
+        }
+        $(function () {
+            $('.selectpicker').selectpicker({
+                selectedTextFormat: 'count > 3'
+            });
+        })
+        function InitCheckBox(obj) {
+            $(obj).checkboxpicker({
+                onLabel: 'Да',
+                offLabel: 'Нет',
+                onActiveCls: 'btn-danger',
+                offActiveCls: 'btn-success',
+                onCls: 'btn-outline-secondary',
+                offCls: 'btn-outline-secondary'
+            });
+        }
+        InitCheckBox($(".checkbox"));
+    </script>
+}
+<style>
+    .display-none {
+        display: none
+    }
+
+    .positively {
+        background: rgba(0, 255, 33, 0.20) !important
+    }
+
+    .negatively {
+        background: rgba(255, 0, 0, 0.20) !important
+    }
+
+    input, textarea, select {
+        max-width: 100%;
+        border: 0 !important;
+        box-shadow: none !important
+    }
+
+    input {
+        max-height: 36px !important
+    }
+
+    .bootstrap-select .btn {
+        background: white;
+
+    }
+
+    /* .bootstrap-select .btn:focus {
+            border: 0 ;
+            outline: 0 !important;
+            box-shadow: none !important;
+        }*/
+    .btn {
+        border: 0;
+        box-shadow: none !important
+    }
+
+    /* Убрать стрелки у number полей */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    table.pat td, thead.pat td, tbody.pat td {
+        text-align: center;
+        vertical-align: middle;
+        line-height: 1;
+    }
+
+    table.pat thead td, .paddingTopBottom2 td {
+        font-size: 12px;
+        font-weight: 700;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    table.pat tbody#contr_preparats td, table.pat tbody#contr_kts td, table.pat tbody#contr_ident_virus td {
+        padding: 0;
+        border-bottom: 1px solid lightgrey;
+    }
+
+    .label-grey {
+        background: lightgrey;
+        border: 1px solid white !important
+    }
+
+    .contr-dinamics td {
+        vertical-align: middle;
+        border: 1px solid lightgrey !important;
+        padding: 0;
+        border: 0
+    }
+
+    .contr-dinamics input {
+        border: 0;
+        box-shadow: none !important
+    }
+
+    .padding0 {
+        padding: 0 !important;
+        width: 1px !important;
+        vertical-align: middle !important
+    }
+
+    /*    .paddingTopBottom2 td {
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }*/
+
+    .contr-dinamics input {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    table.pat tbody {
+        background: white
+    }
+
+    input.hide-date-ico {
+        max-width: 100% !important;
+        padding: 2px;
+        text-align: center
+    }
+
+        input.hide-date-ico[type="date"]::-webkit-inner-spin-button,
+        input.hide-date-ico[type="date"]::-webkit-calendar-picker-indicator {
+            display: none !important;
+            -webkit-appearance: none !important;
+            /*  background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;*/
+        }
+
+    /*input[type="date"]::-webkit-calendar-picker-indicator {
+        color: rgba(0, 0, 0, 0);
+        opacity: 0.9;
+        display: block;
+        cursor: pointer;
+        background: url(/images/pngwing.png) no-repeat;
+        width: 25px;
+        height: 25px;
+    }*/
+    input[disabled] {
+    }
+</style>

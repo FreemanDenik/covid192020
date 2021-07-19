@@ -1,0 +1,40 @@
+﻿@model covid192020.Models.ViewModels.TreatmentViewModel
+<tbody id="contr_kts">
+    @if (Model.Kts != null)
+        for (var i = 0; i < Model.Kts.Count; i++)
+        {
+            <tr  class="input-kts">
+                <td style="border-right: 1px solid lightgrey">
+                    <input asp-for="Kts[i].Id" id="id_number" type="hidden" />
+                    <input asp-for="Kts[i].CreateDate" type="date" class="form-control hide-date-ico" style="max-width: 100%" />
+                </td>
+                <td>
+                    <input asp-for="Kts[i].Title" class="form-control" style="max-width: 100%" />
+                </td>
+                <td class='padding0'>
+                    <button type="button" onclick="RemoveElement(this, 'contr_kts','input-kts')" class="btn btn-danger">
+                        <svg width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        }
+    @{ Model.Kts.Add(new covid192020.Models.ViewModels.KtViewModel()); }
+    <tr id="input-kts" class="display-none">
+        <td style="border-right: 1px solid lightgrey">
+            <input disabled asp-for="Kts[Model.Kts.Count-1].Id" id="id_number" type="hidden" />
+            <input disabled asp-for="Kts[Model.Kts.Count-1].CreateDate" value="" type="date" class="form-control hide-date-ico" style="max-width: 100%" />
+        </td>
+        <td>
+            <input disabled asp-for="Kts[Model.Kts.Count-1].Title" class="form-control" style="max-width: 100%" />
+        </td>
+        <td class='padding0'>
+            <button type="button" onclick="RemoveElement(this, 'contr_kts','input-kts')" class="btn btn-danger">
+                <svg width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                </svg>
+            </button>
+        </td>
+    </tr>
+</tbody>

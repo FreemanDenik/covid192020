@@ -1,0 +1,18 @@
+﻿table {
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    page-break-inside: avoid
+}
+
+    table td {
+       
+        text-align: center;
+        padding: 5px;
+    }
+    table:not([class=no-border]) td {
+        border: 1px solid #000000;
+    }
+.dinamics{
+    font-size: 12px
+}

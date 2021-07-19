@@ -1,0 +1,318 @@
+﻿@model covid192020.Models.ViewModels.PatientViewModel
+
+@section Styles{
+    <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/lib/datetimpicker/build/jquery.datetimepicker.min.css" asp-append-version="true" />*@
+}
+@if ((bool)TempData["ChangePatient"] != true)
+{
+    <h3>
+        <text>Добавить пациента</text>
+        @{ViewData["Title"] = "Добавить пациента";}
+    </h3>
+    <hr />
+}
+@if ((bool)TempData["ChangePatient"] == true)
+{
+    ViewData["Title"] = "Изменить данные пациента";
+    <div>
+        <div style="display: block; float: right; margin-top: 5px">
+            <a asp-protocol="https" asp-area="" asp-controller="Patient" asp-action="Treatment" asp-route-PatientId="@Model.Id" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                    <path d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                </svg>
+                Ввод данных
+            </a>
+        </div>
+        <div style="display: block;">
+            <h3>Изменить данные @Model.Fio</h3>
+        </div>
+    </div>
+    <hr />
+}
+@if (TempData["SetPatientSuccess_Fio"] != null)
+{
+    <h3 style="color: forestgreen">Сохранение данных пациента прошло успешно!</h3>
+    <hr />
+}
+else if (TempData["UpdatePatientSuccess_Fio"] != null)
+{
+    <h3 style="color: forestgreen">Изменение даных прошло успешно!</h3>
+    <hr />
+}
+<form asp-protocol="https" asp-area="" asp-controller="Patient" asp-action="AddEdit" asp-antiforgery="true" novalidate>
+    @* novalidate *@
+    <input asp-for="Id" type="hidden" />
+    <table border="0" class="pat-table">
+        <tr>
+            <td colspan="2" style="padding: 20px; text-align: center">
+                <h3> @Html.ValidationMessage("SpecialError")</h3>
+
+            </td>
+        </tr>
+        @* ФИО *@
+        <tr>
+            <td>
+                <label class="pat-labale">Фамилия</label>
+            </td>
+            <td>
+                <div class="input-group ">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <input asp-for="Fio" class="form-control" placeholder="Пример: Иванов Иван Иванович" />
+                </div>
+            </td>
+        </tr>
+        @* Дата начало болезни *@
+        <tr>
+            <td style="width:240px">
+                <label class="pat-labale">Дата начало болезни</label>
+            </td>
+            <td>
+                <div class="input-group ">
+                    <!--mb-3-->
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-calendar-event" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                                <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <input asp-for="DateInfected" class="form-control" autocomplete="off">
+                </div>
+            </td>
+        </tr>
+        @* Дата поступления *@
+        <tr>
+            <td>
+                <label class="pat-labale">Дата поступления</label>
+            </td>
+            <td>
+                <div class="input-group ">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-calendar-plus" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                                <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <input asp-for="DateAdmission" class="form-control" autocomplete="off" placeholder="Пример: дд.мм.гггг">
+                </div>
+            </td>
+        </tr>
+        @* Дата поступления в ОРИТ *@
+        <tr>
+            <td>
+                <label class="pat-labale">Дата поступления в ОРИТ</label>
+            </td>
+            <td>
+                <div class="input-group ">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-calendar-plus-fill" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM8.5 8.5a.5.5 0 0 0-1 0V10H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V11H10a.5.5 0 0 0 0-1H8.5V8.5z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <input asp-for="DateOrit" class="form-control" autocomplete="off" placeholder="Пример: дд.мм.гггг">
+                </div>
+            </td>
+        </tr>
+        @* Возраст *@
+        <tr>
+            <td>
+                <label class="pat-labale">Возраст</label>
+            </td>
+            <td>
+                <div class="input-group ">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-sort-numeric-up-alt" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4 14a.5.5 0 0 0 .5-.5v-11a.5.5 0 0 0-1 0v11a.5.5 0 0 0 .5.5z" />
+                                <path fill-rule="evenodd" d="M6.354 4.854a.5.5 0 0 0 0-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L4 3.207l1.646 1.647a.5.5 0 0 0 .708 0z" />
+                                <path d="M9.598 5.82c.054.621.625 1.278 1.761 1.278 1.422 0 2.145-.98 2.145-2.848 0-2.05-.973-2.688-2.063-2.688-1.125 0-1.972.688-1.972 1.836 0 1.145.808 1.758 1.719 1.758.69 0 1.113-.351 1.261-.742h.059c.031 1.027-.309 1.856-1.133 1.856-.43 0-.715-.227-.773-.45H9.598zm2.757-2.43c0 .637-.43.973-.933.973-.516 0-.934-.34-.934-.98 0-.625.407-1 .926-1 .543 0 .941.375.941 1.008zM12.438 14V8.668H11.39l-1.262.906v.969l1.21-.86h.052V14h1.046z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <input asp-for="Age" class="form-control" placeholder="Пример: 40" max="170" />
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 45px; border-left:0">
+                            лет
+                        </span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        @* Вес *@
+        <tr>
+            <td>
+                <label class="pat-labale">Вес</label>
+            </td>
+            <td>
+                <div class="input-group ">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-bar-down" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3.646 4.146a.5.5 0 0 1 .708 0L8 7.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zM1 11.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <input asp-for="Weight" class="form-control" placeholder="Пример: 86" max="300" />
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 45px; border-left:0">
+                            кг.
+                        </span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        @if ((bool)TempData["ChangePatient"] == true)
+        {
+            @* Состояние *@
+            <tr>
+                <td>
+                    <label class="pat-labale">Положение</label>
+                </td>
+                <td>
+                    <div class="input-group ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-bar-down" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M3.646 4.146a.5.5 0 0 1 .708 0L8 7.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zM1 11.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z" />
+                                </svg>
+                            </span>
+                        </div>
+                        <select asp-for="State" asp-items="@Model.SelectListState" title="-- Выберите пункт --" class="form-control selectpicker">
+                        </select>
+                    </div>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td colspan="2" style="text-align: right; padding: 30px;">
+
+
+                <button type="submit" class="btn btn-success">
+                    @if ((bool)TempData["ChangePatient"] == true)
+                    {
+                        <text>Изменить данные пациента</text>
+                    }
+                    else
+                    {
+                        <text>Сохранить данные пациента</text>
+                    }
+                </button>
+            </td>
+        </tr>
+    </table>
+
+</form>
+@section Popper{
+    <script src="~/js/bootstrap-select/popper.min.js"></script>
+}
+@section Scripts{
+
+    @*<script src="~/lib/datetimpicker/build/jquery.datetimepicker.full.js"></script>
+        <script src="~/js/moment.js"></script>*@
+    <script src="~/lib/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/bootstrap-select/dist/js/i18n/defaults-ru_RU.min.js"></script>
+    <script src="~/js/bootstrap-select/boostrap-select-validation.min.js"></script>
+
+    @*<script src="~/lib/bootstrap-checkbox/dist/js/bootstrap-checkbox.js"></script>
+        <script src="~/lib/bootstrap-checkbox/dist/js/i18n/ru.js"></script>*@
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="~/js/addMethod.min.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            $('.selectpicker').selectpicker();
+        })
+                            /*$.datetimepicker.setLocale('ru');
+
+$('.datetimepicker').datetimepicker({
+lang: 'ru',
+timepicker: false,
+format: 'd.m.Y',
+theme: 'dark',
+validateOnBlur: false,
+minDate: '-1970/01/2',
+maxDate: '+1970/01/2',
+onChangeDateTime: function (dp, $input) {
+
+
+console.log($input.val());
+var dateB = moment('2014-12-12');
+
+var dateC = moment('2014-12-01');
+console.log(dateB.diff(dateC, 'days'));
+
+}
+//allowBlank: true,
+//validateOnBlur: true/*,
+//mask: '31/12/9999'
+// mask: true,
+});*/
+
+
+                        //    $('.selectpicker').selectpicker({
+                        //        selectedTextFormat: 'count > 1'
+                        //    });
+                        //    $("#virus").checkboxpicker({
+                        //        onLabel: 'Не подтвержден',
+                        //        offLabel: 'Подтвержден'
+                        //    });
+                        //    $("#virus").parent().children(".btn-group").removeAttr("tabindex");
+                        //    $("#virus").parent().find("button").attr("tabindex", "0");
+                        //});
+                        //$('.selectpicker').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                        //    console.log(isSelected, previousValue, $(this).selectpicker('val'));
+                        //});
+                        //$('.selectpicker').on('shown.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                        //    console.log('show');
+                        //});
+                        //$('.selectpicker').on('hidden.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                        //    console.log('hide');
+                        //});
+    </script>
+}
+<style>
+
+
+    table.pat-table {
+        width: 700px
+    }
+
+        table.pat-table input {
+            max-width: 100%
+        }
+
+        table.pat-table tr td {
+            text-align: right
+        }
+
+            table.pat-table tr td label.pat-labale {
+                padding-right: 15px;
+            }
+
+    .pat-labale {
+        font-size: 18px;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        color: rgba(0, 0, 0, 0);
+        opacity: 0.9;
+        display: block;
+        cursor: pointer;
+        background: url(/images/pngwing.png) no-repeat;
+        width: 25px;
+        height: 25px;
+    }
+</style>

@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using covid192020.Models.Entities
+@inject UserManager<CustomIdentityUser> userManager
+
+@{
+
+    var u = userManager.Users.ToList();
+
+}
+<h1>Список пользователей</h1>
+<hr />
+@if (TempData["RegistStatusFio"] != null)
+{
+    <h4 style="color: green">Регестрация пользователя @TempData["RegistStatusFio"] прошла успешно!</h4>
+    <hr />
+}
+@if (TempData["DeleteStatusFio"] != null)
+{
+    <h4 style="color: #ff6a00">Удаление пользователя @TempData["DeleteStatusFio"] прошло успешно!</h4>
+    <hr />
+}
+<table border="0" class="table">
+    <tr style="background: #393838; color: white">
+
+        <td><b>ФИО пользователя</b></td>
+        <td><b>Логин</b></td>
+        <td><b>Доступ</b></td>
+    </tr>
+
+    @foreach (var i in u)
+    {
+        <tr class="pat-actice-row" onclick="window.location = '@Url.Action("Edit","Account", new { area = "Admin", Id = i.Id })'">
+            <td>
+                @i.UserFio
+            </td>
+            <td>
+                @i.UserName
+            </td>
+            <td>
+                @String.Join(", ", await userManager.GetRolesAsync(i))
+            </td>
+        </tr>
+    }
+</table>
+<style>
+    table {
+        background: white;
+        box-shadow: 2px 2px 10px black
+    }
+
+        table td {
+            border: 1px solid lightgrey;
+        }
+
+    .pat-actice-row {
+        transition: 0.2s;
+        cursor: pointer
+    }
+
+        .pat-actice-row:hover {
+            background: #05717c;
+            color: white
+        }
+</style>

@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using covid192020.Models.Entities
+@inject SignInManager<CustomIdentityUser> SignInManager
+@inject UserManager<CustomIdentityUser> UserManager
+@{
+    var CurrentUser = await UserManager.FindByIdAsync(UserManager.GetUserId(User));
+    var IsAdmin = CurrentUser != null ? await UserManager.IsInRoleAsync(CurrentUser, "Admin") : false;
+    var IsAssistant = CurrentUser != null ? await UserManager.IsInRoleAsync(CurrentUser, "Assistant") : false;
+}
+<ul class="navbar-nav">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (IsAdmin)
+        {
+            <li class="nav-item">
+                <a class="nav-link text-black-50">Здравствуйте главный @CurrentUser.UserFio</a>
+            </li>
+        }
+        else if (IsAssistant)
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark">Здравствуйте ассистент @CurrentUser.UserFio</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark">Здравствуйте, @CurrentUser.UserFio!</a>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="index">На сайт</a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Выход</button>
+            </form>
+        </li>
+    }
+
+</ul>

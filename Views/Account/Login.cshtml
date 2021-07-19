@@ -1,0 +1,43 @@
+﻿@model covid192020.Models.ViewModels.LoginViewModel
+@{ 
+    ViewData["Title"] = "Вход";
+}
+<h2>Вход в приложение</h2>
+<form method="post" asp-area="" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="UserName"></label><br />
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label><br />
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <label asp-for="RememberMe"></label><br />
+        <input asp-for="RememberMe" />
+    </div>
+    <br />
+        <button type="submit" class="btn btn-primary">Войти</button>
+    
+</form>
+@section Scripts{
+    <script src="~/lib/bootstrap-checkbox/dist/js/bootstrap-checkbox.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap-checkbox/dist/js/i18n/ru.js"></script>
+
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script>
+        $("#RememberMe").checkboxpicker({
+            onLabel: 'Да',
+            offLabel: 'Нет',
+            onActiveCls: 'btn-warning',
+            offActiveCls: 'btn-success',
+            onCls: 'btn-outline-secondary',
+            offCls: 'btn-outline-secondary'
+        });
+    </script>
+}

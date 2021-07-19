@@ -1,0 +1,61 @@
+﻿@model covid192020.Areas.Admin.Models.ViewModels.RegisterViewModel
+@section Styles{
+    <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.css" asp-append-version="true" />
+}
+<h2>Регистрация нового пользователя</h2>
+<div style="width: 450px">
+    <form method="post" asp-area="Admin" asp-controller="Account" asp-action="Register" asp-antiforgery="true">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="UserFio"></label><br />
+            <input asp-for="UserFio" class="form-control" />
+            <span asp-validation-for="UserFio"></span>
+        </div>
+        <div>
+            <label asp-for="RolesName"></label><br />
+            <select asp-for="RolesName" asp-items="@ViewBag.RolesSelectList" title="-- Выберите пункты --" class="form-control selectpicker"> </select>
+            <span asp-validation-for="RolesName"></span>
+        </div>
+        <div>
+            <label asp-for="UserName"></label><br />
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName"></span>
+        </div>
+
+        <div>
+            <label asp-for="Password"></label><br />
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div>
+            <label asp-for="PasswordConfirm"></label><br />
+            <input asp-for="PasswordConfirm" class="form-control" />
+            <span asp-validation-for="PasswordConfirm"></span>
+        </div>
+        <br />
+        <div>
+            <button type="submit" class="btn btn-success">Регистрация</button>
+        </div>
+    </form>
+</div>
+<style>
+    input, select {
+        max-width: 100%
+    }
+</style>
+@section Popper{
+    @* Popper должен находится перед файлом boostrap *@
+    <script src="~/lib/bootstrap-select/dist/popper.js"></script>
+}
+@section Scripts{
+    <script src="~/lib/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="~/lib/bootstrap-select/dist/js/i18n/defaults-ru_RU.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script>
+        $('.selectpicker').selectpicker({
+            selectedTextFormat: 'count > 4'
+        });
+    </script>
+}

@@ -1,0 +1,72 @@
+﻿@model covid192020.Models.ViewModels.TreatmentViewModel
+<tbody id="contr-dinamics" class="contr-dinamics">
+    @if (Model.Dinamics != null)
+        for (var i = 0; i < Model.Dinamics.Count; i++)
+        {
+
+            <tr class="input-dinamics">
+                <td>
+                    <input asp-for="Dinamics[i].Id" id="id_number" type="hidden" />
+                    <input asp-for="Dinamics[i].CreateDate" type="date"  class="form-control hide-date-ico" />
+                </td>
+                <td><input asp-for="Dinamics[i].PaO2FiO2" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].SpO2" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].CHDD" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].PKT" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].CRB" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].WBC" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].PLT" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].D_Dim" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].Ob_bel" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].Ob_bil" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].Moch" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].Kreat" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].F_gen" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].ALT" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].ACT" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].LDG" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].Lymphocytes" autocomplete="off" class="form-control" /></td>
+                <td><input asp-for="Dinamics[i].Ferritin" autocomplete="off" class="form-control" /></td>
+                <td style="padding:0!important; width: 1px">
+                    <button type="button" onclick="RemoveElement(this, 'contr-dinamics','input-dinamics')" class="btn btn-danger" style="margin: 0!important">
+                        <svg width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+
+        }
+    @{Model.Dinamics.Add(new covid192020.Models.ViewModels.DinamicViewModel());}
+    <tr id="input-dinamics" class="display-none">
+        <td>
+            <input asp-for="Dinamics[Model.Dinamics.Count-1].Id" id="id_number" type="hidden" disabled value="0"  />
+            <input asp-for="Dinamics[Model.Dinamics.Count-1].CreateDate" disabled type="date" value="" class="form-control hide-date-ico" />
+        </td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].PaO2FiO2" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].SpO2" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].CHDD" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].PKT" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].CRB" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].WBC" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].PLT" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].D_Dim" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].Ob_bel" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].Ob_bil" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].Moch" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].Kreat" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].F_gen" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].ALT" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].ACT" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].LDG" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].Lymphocytes" disabled autocomplete="off" class="form-control" /></td>
+        <td><input asp-for="Dinamics[Model.Dinamics.Count-1].Ferritin" disabled autocomplete="off" class="form-control" /></td>
+        <td style="padding:0!important; width: 1px">
+            <button type="button" onclick="RemoveElement(this, 'contr-dinamics','input-dinamics')" class="btn btn-danger">
+                <svg width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z" />
+                </svg>
+            </button>
+        </td>
+    </tr>
+</tbody>

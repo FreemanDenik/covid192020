@@ -1,0 +1,403 @@
+﻿@model covid192020.Models.ViewModels.TreatmentViewModel
+@using covid192020.Models.ViewModels
+@using covid192020.Infrastructure
+@{
+
+    //var PatientInfo = (PatientViewModel)ViewBag.PatientInfo;
+    ViewData["Title"] = $"Сводка {Model.PatientInfo.Fio}";
+
+
+}
+
+<h2>@Model.PatientInfo.Fio</h2>
+<hr />
+@if (TempData["SaveTreatment"] != null && (bool)TempData["SaveTreatment"] == true)
+{
+    <h3 style="color: forestgreen">Сохранение данных прошло успешно!</h3>
+    <hr />
+}
+@{var PatientId = ViewContext.RouteData.Values["PatientId"]; }
+<div class="btn-group">
+    @*<div style="width: 5px"></div>
+    <a asp-protocol="https" asp-area="" asp-controller="Patient" asp-action="Summary" asp-route-PatientId="@PatientId" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+        </svg>
+        Предварительный просмотр
+    </a>*@
+    <div style="width: 5px"></div>
+    <button onclick="print()" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
+            <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" />
+            <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+        </svg>
+        Печать
+    </button>
+    <div style="width: 5px"></div>
+    <a asp-protocol="https" asp-area="" asp-controller="Patient" asp-action="Treatment" asp-route-PatientId="@PatientId" class="btn btn-primary">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-lines-fill" fill="currentColor">
+            <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7 1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm2 9a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+        </svg>
+        Ввод данных
+    </a>
+</div>
+<hr />
+
+@* Анотация к пациенту *@
+<table border="0" class="table pat">
+    <thead class="table-dark">
+        <tr>
+            <td colspan="8">Общие данные</td>
+        </tr>
+        <tr>
+            <td>Дата последней записи</td>
+            <td>Болеет</td>
+            <td>ВДНХ </td>
+            <td>ОРИТ </td>
+            <td>Возраст</td>
+            <td>Вес</td>
+            <td>
+                Диагноз
+            </td>
+            @*<td>
+                Идентификация вируса
+            </td>*@
+        </tr>
+    </thead>
+    <tr>
+        <td>@(Model.LastChangeDate != null ? ((DateTime)Model.LastChangeDate).ToString("dd MMMM yyyy HH:mm:ss") : "нет записи")</td>
+        <td>@Model.PatientInfo.DateInfected.ToString("dd.MM.yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateInfected).Days (сутки)</td>
+        <td>@Model.PatientInfo.DateAdmission.ToString("dd.MM.yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateAdmission).Days (сутки)</td>
+        <td>@Model.PatientInfo.DateOrit.ToString("dd.MM.yyyy")<br /> @DateTime.Now.Subtract(Model.PatientInfo.DateOrit).Days (сутки)</td>
+        <td>@Model.PatientInfo.Age</td>
+        <td>@Model.PatientInfo.Weight</td>
+        <td>
+            @(String.Join(", ", Model.SelectListDiagnosis.Where(t=>t.Selected == true).Select(t=>t.Text)))
+        </td>
+
+        @*@if (Model.DateVirusIdentification != null)
+        {
+            <td style="background: rgba(220, 0, 0, 0.58)">
+                Инфицирован!<br />
+                @(((DateTime)Model.DateVirusIdentification).ToString("dd MMMM yyyy"))
+            </td>
+        }
+        else
+        {
+            <td style="background: rgba(22, 157, 21, 0.58)">
+                Вирус не идентифицирован
+            </td>
+        }*@
+
+    </tr>
+</table>
+@* Динамика *@
+<table border="0" class="table pat">
+    <thead class="table-dark">
+        <tr>
+            <td colspan="19">
+                Динамика
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Дата
+            </td>
+            <td>
+                PaO2/<br /> FiO2
+            </td>
+            <td>
+                SpO2
+            </td>
+            <td>
+                ЧДД
+            </td>
+            <td>
+                ПКТ
+            </td>
+            <td>
+                СРБ
+            </td>
+            <td>
+                WBC
+            </td>
+            <td>
+                PLT
+            </td>
+            <td>
+                Д-<br />Дим
+            </td>
+            <td>
+                Об.<br /> бел
+            </td>
+            <td>
+                Об.<br /> бил
+            </td>
+            <td>
+                Моч
+            </td>
+            <td>
+                Креат
+            </td>
+            <td>
+                Ф-<br />ген
+            </td>
+            <td>
+                АЛТ
+            </td>
+            <td>
+                АСТ
+            </td>
+            <td>
+                ЛДГ
+            </td>
+            <td>
+                Лимф<br /> оциты
+            </td>
+            <td>
+                Ферр<br /> итин
+            </td>
+            @*<td>
+                    L
+                </td>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model.Dinamics)
+        {
+            <tr>
+                <td>
+                    @i.CreateDate.ToString("dd.MM.yyyy")
+                </td>
+                <td>
+                    @i.PaO2FiO2
+                </td>
+                <td>
+                    @i.SpO2
+                </td>
+                <td>
+                    @i.CHDD
+                </td>
+                <td>
+                    @i.PKT
+                </td>
+                <td>
+                    @i.CRB
+                </td>
+                <td>
+                    @i.WBC
+                </td>
+                <td>
+                    @i.PLT
+                </td>
+                <td>
+                    @i.D_Dim
+                </td>
+                <td>
+                    @i.Ob_bel
+                </td>
+                <td>
+                    @i.Ob_bil
+                </td>
+                <td>
+                    @i.Moch
+                </td>
+                <td>
+                    @i.Kreat
+                </td>
+                <td>
+                    @i.F_gen
+                </td>
+                <td>
+                    @i.ALT
+                </td>
+                <td>
+                    @i.ACT
+                </td>
+                <td>
+                    @i.LDG
+                </td>
+                <td>
+                    @i.Lymphocytes
+                </td>
+                <td>
+                    @i.Ferritin
+                </td>
+            </tr>
+        }
+
+        @*<td>
+                <button class="btn btn-primary" type="button" id="13" onclick="lockUnlock(this)" style="border: 0">
+                    <svg width="16" height="16" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">
+                        <path d="M.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z" />
+                        <path fill-rule="evenodd" d="M8.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z" />
+                    </svg>
+                </button>
+            </td>
+        </tr>*@
+    </tbody>
+</table>
+<table>
+    <tr>
+        <td style="vertical-align: top">
+            @* Препараты *@
+            <table class="table pat">
+                <thead class="table-dark">
+                    <tr>
+                        <td colspan="3">
+                            Препараты
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Дата
+                        </td>
+                        <td>
+                            Назначение
+                        </td>
+                        <td>
+                            Отменен
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model.Preparats)
+                    {
+                        <tr style="@(i.CancelDate != null ? "background: rgba(220, 0, 0, 0.58)" : null)">
+                            <td>
+                                @i.CreateDate.ToString("dd.MM.yyyy")
+                            </td>
+                            <td style="text-align: left">
+                                @i.Title
+                            </td>
+                            <td>
+                                @(i.CancelDate != null ? ((DateTime)i.CancelDate).ToString("dd.MM.yyyy") : "используется")
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </td>
+
+        <td style="vertical-align: top">
+            @* КТ *@
+            <table class="table pat">
+                <thead class="table-dark">
+                    <tr>
+                        <td colspan="2">
+                            КТ
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Дата
+                        </td>
+                        <td>
+                            Тенденциея
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model.Kts)
+                    {
+                        <tr>
+                            <td>
+                                @i.CreateDate.ToString("dd.MM.yyyy")
+                            </td>
+                            <td style="text-align: left">
+                                @i.Title
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </td>
+        <td style="vertical-align: top">
+            @* Идентификация вируса *@
+            <table class="table pat">
+                <thead class="table-dark">
+                    <tr>
+                        <td colspan="2">
+                            Исследование вируса
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Дата
+                        </td>
+                        <td>
+                            Идентификация
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model.IdentViruses)
+                    {
+                        <tr>
+                            <td>
+                                @i.CreateDate.ToString("dd.MM.yyyy")
+                            </td>
+                            <td style="text-align: left; background:@(i.IsIdent == true ? "rgba(220, 0, 0, 0.58)" : " rgba(34, 139, 34, 0.58) ")">
+                                @(i.IsIdent == true ? "Идентифицирован" : "Не идентифицирован")
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+@section Scripts{ 
+    <script>
+    function print() {
+
+        document.getElementById('print_treatment').contentWindow.print();
+
+    }
+    </script>
+}
+
+<iframe id="print_treatment" src="@Url.Action("Summary", "Patient", new { area = "", PatientId, Print = "print" })" style="display: none">
+
+</iframe>
+<style>
+    /*  body {
+        background: white
+    }*/
+
+    .pat {
+        -webkit-box-shadow: 0px 8px 6px 0px rgba(34, 60, 80, 0.22);
+        -moz-box-shadow: 0px 8px 6px 0px rgba(34, 60, 80, 0.22);
+        box-shadow: 0px 8px 6px 0px rgba(34, 60, 80, 0.22);
+        vertical-align: top
+    }
+
+        .pat td {
+            text-align: center;
+            border: 1px solid lightgrey;
+            vertical-align: middle;
+        }
+
+    table.pat thead td {
+        font-size: 12px;
+        font-weight: 700;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    table.pat tbody {
+        background: white
+    }
+/*    @@media print{
+        * {
+            display: none;
+        }
+        .print {
+            display: inline-block!important
+        }
+    }*/
+</style>

@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-sm-3" style="border-top:1px solid lightgrey">
+
+            <div class="container">
+                <a asp-protocol="https" asp-area="" asp-controller="Home" asp-action="Index"  class="navbar-brand">
+                    
+                    ВДНХ 75
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a asp-protocol="https" asp-area="" asp-controller="Patient" asp-action="Index" asp-route-PatientId="" class="nav-link text-white" >
+                                
+                                Пациенты
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-protocol="https" asp-area="" asp-controller="Patient" asp-action="AddEdit" asp-route-PatientId=""  class="nav-link text-white" >
+                                
+                                Добавить пациента
+                            </a>
+                        </li>
+                        @*<li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Patient" asp-action="DinamicPatient">
+                                
+                                Динамика
+                            </a>
+                        </li>*@
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted table-dark" style="border-bottom:1px solid lightgrey">
+        <div style="height: 80px">
+
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    @* Popper должен находится перед файлом boostrap.js *@
+    @RenderSection("Popper", required: false)
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
