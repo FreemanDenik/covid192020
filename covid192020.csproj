@@ -12,6 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Medic\**" />
+    <Content Remove="Areas\Medic\**" />
+    <EmbeddedResource Remove="Areas\Medic\**" />
+    <None Remove="Areas\Medic\**" />
+    <TypeScriptCompile Remove="Areas\Medic\**" />
     <TypeScriptCompile Remove="node_modules\**" />
   </ItemGroup>
 
@@ -56,9 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Medic\Controllers\" />
-    <Folder Include="Areas\Medic\Models\" />
-    <Folder Include="Areas\Medic\Views\" />
     <Folder Include="wwwroot\lib\datetimpicker\" />
     <Folder Include="wwwroot\lib\jquery\dist\" />
     <Folder Include="Keys\" />
